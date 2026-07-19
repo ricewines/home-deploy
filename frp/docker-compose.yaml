@@ -1,0 +1,20 @@
+# docker-compose.yml
+services:
+  frpc:
+    env_file:
+      - 'D:\Users\CXH\data\secret\.env.secret.txt'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: frpc
+    volumes:
+      - './frpc.toml:/frp/frpc.toml'
+    ports:
+      - '7400:7400'
+    networks:
+      - shared
+    restart: unless-stopped
+
+networks:
+  shared:
+    external: true

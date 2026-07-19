@@ -1,0 +1,20 @@
+# docker-compose.yml
+services:
+  openlist:
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/openlistteam/openlist:v4.2.2'
+    container_name: openlist
+    user: '0:0' # Please replace `0:0` with the actual user ID and group ID you want to use to run OpenList.
+    volumes:
+      - 'D:\Users\CXH\data\openlist\:/opt/openlist/data'
+      - 'D:\Users\CXH\:/nas'
+    ports:
+      - '5244:5244'
+    environment:
+      - UMASK=022
+    networks:
+      - shared
+    restart: unless-stopped
+
+networks:
+  shared:
+    external: true
