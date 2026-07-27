@@ -35,9 +35,16 @@ remotePort = 5244
 [[proxies]]
 name = "invest-page"
 type = "tcp"
-localIP = "nginx"
+localIP = "chixuehuidocker-invest-nginx"
 localPort = 80
 remotePort = 7080
+
+[[proxies]]
+name = "seen-page"
+type = "tcp"
+localIP = "chixuehuidocker-seen-nginx"
+localPort = 80
+remotePort = 9080
 
 [[proxies]]
 name = "tplink"
@@ -49,6 +56,6 @@ remotePort = 6080
 [[proxies]]
 name = "remote-desktop"
 type = "tcp"
-localIP = "127.0.0.1"
+localIP = "192.168.0.112"
 localPort = 3389
 remotePort = 3389

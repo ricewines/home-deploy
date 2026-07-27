@@ -1,0 +1,257 @@
+# docker-compose.yml
+services:
+  chixuehuidocker-minio:
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/pgsty/minio:RELEASE.2026-06-18T00-00-00Z'
+    ports:
+      - "19000:9000"
+      - "19001:9001"
+    volumes:
+      - D:\Users\CXH\data\minio\data:/mnt/data
+      - D:\Users\CXH\data\minio\minio.license:/minio.license
+      - D:\Users\CXH\data\minio\certs:/etc/minio/certs
+    command: server /data --console-address ":9001"
+  chixuehuidocker-mysql:
+    env_file:
+      - 'D:\Users\CXH\data\secret\.env.secret.txt'
+    environment:
+      MYSQL_ROOT_PASSWORD: "${CHIXUEHUIDOCKER_MYSQL_PASSWORD}"
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/mysql:8.4.10'
+    networks:
+      - shared
+    ports:
+      - "13306:3306"
+    volumes:
+      # 宿主机目录:容器内部mysql数据目录
+      - D:\Users\CXH\data\mysql:/var/lib/mysql
+  chixuehuidocker-redis:
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/redis:8.8'
+    networks:
+      - shared
+    ports:
+      - "16379:6379"
+  chixuehuidocker-zookeeper:
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/zookeeper:3.9.5'
+    networks:
+      - shared
+    ports:
+      - "12181:2181"
+      - "18080:8080"
+  chixuehuidocker-seen-nginx:
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/nginx:1'
+    volumes:
+      - '~/run:/run/html:ro'
+      - '~\IdeaProjects\ricewines\home-deploy\chixuehuidocker\seen-page\nginx.conf:/etc/nginx/conf.d/default.conf'
+    ports:
+      - '9080:80'
+    networks:
+      - shared
+    restart: unless-stopped
+  seen-gateway:
+    command: 'java -jar app.jar --spring.profiles.active=chixuehuidocker'
+    env_file:
+      - 'D:\Users\CXH\data\secret\.env.secret.txt'
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/eclipse-temurin:25.0.3_9-jdk'
+    networks:
+      - shared
+    ports:
+      - "9081:8080"
+    restart: unless-stopped
+    volumes:
+      - '~/run/seen-backend/seen-gateway/target/seen-gateway-${SEEN_VERSION}.jar:/app.jar'
+      - '~/IdeaProjects\ricewines\home-deploy\chixuehuidocker\seen-page:/deploy/chixuehuidocker'
+    working_dir: /
+  seen-service:
+    command: 'java -jar app.jar --spring.profiles.active=chixuehuidocker'
+    depends_on:
+      - chixuehuidocker-mysql
+    env_file:
+      - 'D:\Users\CXH\data\secret\.env.secret.txt'
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/eclipse-temurin:25.0.3_9-jdk'
+    networks:
+      - shared
+    ports:
+      - "9082:8080"
+    restart: unless-stopped
+    volumes:
+      - '~/run/seen-backend/seen-service/target/seen-service-${SEEN_VERSION}.jar:/app.jar'
+      - '~/IdeaProjects\ricewines\home-deploy\chixuehuidocker\seen-page:/deploy/chixuehuidocker'
+    working_dir: /
+  seen-calc:
+    command: 'java -jar app.jar --spring.profiles.active=chixuehuidocker'
+    depends_on:
+      - chixuehuidocker-mysql
+    env_file:
+      - 'D:\Users\CXH\data\secret\.env.secret.txt'
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/eclipse-temurin:25.0.3_9-jdk'
+    networks:
+      - shared
+    ports:
+      - "8080"
+    restart: unless-stopped
+    volumes:
+      - '~/run/seen-backend/seen-micro/seen-calc/target/seen-calc-${SEEN_VERSION}.jar:/app.jar'
+      - '~/IdeaProjects\ricewines\home-deploy\chixuehuidocker\seen-page:/deploy/chixuehuidocker'
+    working_dir: /
+  seen-socket:
+    command: 'java -jar app.jar --spring.profiles.active=chixuehuidocker'
+    depends_on:
+      - chixuehuidocker-mysql
+    env_file:
+      - 'D:\Users\CXH\data\secret\.env.secret.txt'
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/eclipse-temurin:25.0.3_9-jdk'
+    networks:
+      - shared
+    ports:
+      - "8080"
+    restart: unless-stopped
+    volumes:
+      - '~/run/seen-backend/seen-micro/seen-socket/target/seen-socket-${SEEN_VERSION}.jar:/app.jar'
+      - '~/IdeaProjects\ricewines\home-deploy\chixuehuidocker\seen-page:/deploy/chixuehuidocker'
+    working_dir: /
+  seen-article:
+    command: 'java -jar app.jar --spring.profiles.active=chixuehuidocker'
+    depends_on:
+      - chixuehuidocker-mysql
+    env_file:
+      - 'D:\Users\CXH\data\secret\.env.secret.txt'
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/eclipse-temurin:25.0.3_9-jdk'
+    networks:
+      - shared
+    ports:
+      - "8080"
+    restart: unless-stopped
+    volumes:
+      - '~/run/seen-backend/seen-micro-database/seen-article/target/seen-article-${SEEN_VERSION}.jar:/app.jar'
+      - '~/IdeaProjects\ricewines\home-deploy\chixuehuidocker\seen-page:/deploy/chixuehuidocker'
+    working_dir: /
+  seen-busi:
+    command: 'java -jar app.jar --spring.profiles.active=chixuehuidocker'
+    depends_on:
+      - chixuehuidocker-mysql
+    env_file:
+      - 'D:\Users\CXH\data\secret\.env.secret.txt'
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/eclipse-temurin:25.0.3_9-jdk'
+    networks:
+      - shared
+    ports:
+      - "8080"
+    restart: unless-stopped
+    volumes:
+      - '~/run/seen-backend/seen-micro-database/seen-busi/target/seen-busi-${SEEN_VERSION}.jar:/app.jar'
+      - '~/IdeaProjects\ricewines\home-deploy\chixuehuidocker\seen-page:/deploy/chixuehuidocker'
+    working_dir: /
+  seen-chat:
+    command: 'java -jar app.jar --spring.profiles.active=chixuehuidocker'
+    depends_on:
+      - chixuehuidocker-mysql
+    env_file:
+      - 'D:\Users\CXH\data\secret\.env.secret.txt'
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/eclipse-temurin:25.0.3_9-jdk'
+    networks:
+      - shared
+    ports:
+      - "8080"
+    restart: unless-stopped
+    volumes:
+      - '~/run/seen-backend/seen-micro-database/seen-chat/target/seen-chat-${SEEN_VERSION}.jar:/app.jar'
+      - '~/IdeaProjects\ricewines\home-deploy\chixuehuidocker\seen-page:/deploy/chixuehuidocker'
+    working_dir: /
+  seen-coin:
+    command: 'java -jar app.jar --spring.profiles.active=chixuehuidocker'
+    depends_on:
+      - chixuehuidocker-mysql
+    env_file:
+      - 'D:\Users\CXH\data\secret\.env.secret.txt'
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/eclipse-temurin:25.0.3_9-jdk'
+    networks:
+      - shared
+    ports:
+      - "8080"
+    restart: unless-stopped
+    volumes:
+      - '~/run/seen-backend/seen-micro-database/seen-coin/target/seen-coin-${SEEN_VERSION}.jar:/app.jar'
+      - '~/IdeaProjects\ricewines\home-deploy\chixuehuidocker\seen-page:/deploy/chixuehuidocker'
+    working_dir: /
+  seen-file:
+    command: 'java -jar app.jar --spring.profiles.active=chixuehuidocker'
+    depends_on:
+      - chixuehuidocker-mysql
+    env_file:
+      - 'D:\Users\CXH\data\secret\.env.secret.txt'
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/eclipse-temurin:25.0.3_9-jdk'
+    networks:
+      - shared
+    ports:
+      - "8080"
+    restart: unless-stopped
+    volumes:
+      - '~/run/seen-backend/seen-micro-database/seen-file/target/seen-file-${SEEN_VERSION}.jar:/app.jar'
+      - '~/IdeaProjects\ricewines\home-deploy\chixuehuidocker\seen-page:/deploy/chixuehuidocker'
+    working_dir: /
+  seen-middle:
+    command: 'java -jar app.jar --spring.profiles.active=chixuehuidocker'
+    depends_on:
+      - chixuehuidocker-mysql
+    env_file:
+      - 'D:\Users\CXH\data\secret\.env.secret.txt'
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/eclipse-temurin:25.0.3_9-jdk'
+    networks:
+      - shared
+    ports:
+      - "8080"
+    restart: unless-stopped
+    volumes:
+      - '~/run/seen-backend/seen-micro-database/seen-middle/target/seen-middle-${SEEN_VERSION}.jar:/app.jar'
+      - '~/IdeaProjects\ricewines\home-deploy\chixuehuidocker\seen-page:/deploy/chixuehuidocker'
+    working_dir: /
+  seen-other:
+    command: 'java -jar app.jar --spring.profiles.active=chixuehuidocker'
+    depends_on:
+      - chixuehuidocker-mysql
+    env_file:
+      - 'D:\Users\CXH\data\secret\.env.secret.txt'
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/eclipse-temurin:25.0.3_9-jdk'
+    networks:
+      - shared
+    ports:
+      - "8080"
+    restart: unless-stopped
+    volumes:
+      - '~/run/seen-backend/seen-micro-database/seen-other/target/seen-other-${SEEN_VERSION}.jar:/app.jar'
+      - '~/IdeaProjects\ricewines\home-deploy\chixuehuidocker\seen-page:/deploy/chixuehuidocker'
+    working_dir: /
+  seen-school:
+    command: 'java -jar app.jar --spring.profiles.active=chixuehuidocker'
+    depends_on:
+      - chixuehuidocker-mysql
+    env_file:
+      - 'D:\Users\CXH\data\secret\.env.secret.txt'
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/eclipse-temurin:25.0.3_9-jdk'
+    networks:
+      - shared
+    ports:
+      - "8080"
+    restart: unless-stopped
+    volumes:
+      - '~/run/seen-backend/seen-micro-database/seen-school/target/seen-school-${SEEN_VERSION}.jar:/app.jar'
+      - '~/IdeaProjects\ricewines\home-deploy\chixuehuidocker\seen-page:/deploy/chixuehuidocker'
+    working_dir: /
+  seen-user:
+    command: 'java -jar app.jar --spring.profiles.active=chixuehuidocker'
+    depends_on:
+      - chixuehuidocker-mysql
+    env_file:
+      - 'D:\Users\CXH\data\secret\.env.secret.txt'
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/eclipse-temurin:25.0.3_9-jdk'
+    networks:
+      - shared
+    ports:
+      - "8080"
+    restart: unless-stopped
+    volumes:
+      - '~/run/seen-backend/seen-micro-database/seen-user/target/seen-user-${SEEN_VERSION}.jar:/app.jar'
+      - '~/IdeaProjects\ricewines\home-deploy\chixuehuidocker\seen-page:/deploy/chixuehuidocker'
+    working_dir: /
+networks:
+  shared:
+    external: true

@@ -1,0 +1,32 @@
+logging:
+  file:
+    name: ${user.home}/seen/logs/${spring.application.name}/${spring.application.name}.log
+  pattern:
+    correlation: "%line "
+seen:
+  env-config:
+    env: ${spring.profiles.active}
+  seen-minio-config:
+    access-key: ${CHIXUEHUIDOCKER_MINIO_ACCESS_KEY}
+    endpoint: http://chixuehuidocker-minio:9000
+    secret-key: ${CHIXUEHUIDOCKER_MINIO_SECRET_KEY}
+spring:
+  cloud:
+    zookeeper:
+      connect-string: chixuehuidocker-zookeeper:2181
+  data:
+    redis:
+      host: chixuehuidocker-redis
+  datasource:
+    hikari:
+      schema: seen
+    password: ${CHIXUEHUIDOCKER_MYSQL_PASSWORD}
+    url: jdbc:mysql://chixuehuidocker-mysql:3306/seen?createDatabaseIfNotExist=true
+    username: root
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  sql:
+    init:
+      mode: never
