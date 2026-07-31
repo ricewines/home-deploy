@@ -10,20 +10,19 @@ webServer.port = 7400
 webServer.user = "admin"
 webServer.password = "{{ .Envs.FRPC_WEB_SERVER_PASSWORD }}"
 
-# 示例代理配置（按需修改）
-# [[proxies]]
-# name = "ssh"
-# type = "tcp"
-# localIP = "127.0.0.1"
-# localPort = 22
-# remotePort = 6000
-
 [[proxies]]
 name = "frp"
 type = "tcp"
 localIP = "frpc"
 localPort = 7400
 remotePort = 7400
+
+[[proxies]]
+name = "remote-desktop"
+type = "tcp"
+localIP = "192.168.0.112"
+localPort = 3389
+remotePort = 3389
 
 [[proxies]]
 name = "openlist"
@@ -33,20 +32,6 @@ localPort = 5244
 remotePort = 5244
 
 [[proxies]]
-name = "invest-page"
-type = "tcp"
-localIP = "chixuehuidocker-invest-nginx"
-localPort = 80
-remotePort = 7080
-
-[[proxies]]
-name = "seen-page"
-type = "tcp"
-localIP = "chixuehuidocker-seen-nginx"
-localPort = 80
-remotePort = 9080
-
-[[proxies]]
 name = "tplink"
 type = "tcp"
 localIP = "192.168.0.1"
@@ -54,8 +39,22 @@ localPort = 80
 remotePort = 6080
 
 [[proxies]]
-name = "remote-desktop"
+name = "invest-page"
 type = "tcp"
-localIP = "192.168.0.112"
-localPort = 3389
-remotePort = 3389
+localIP = "chixuehuidocker-invest-nginx"
+localPort = 80
+remotePort = 7080
+
+[[proxies]]
+name = "phpldapadmin-page"
+type = "tcp"
+localIP = "phpldapadmin"
+localPort = 80
+remotePort = 8280
+
+[[proxies]]
+name = "seen-page"
+type = "tcp"
+localIP = "chixuehuidocker-seen-nginx"
+localPort = 80
+remotePort = 9080
