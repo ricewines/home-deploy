@@ -1,0 +1,42 @@
+services:
+  openldap:
+    env_file:
+      - 'D:\Users\CXH\data\secret\.env.secret.txt'
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/osixia/openldap:1.5.0
+    container_name: openldap
+    hostname: openldap
+    environment:
+      # 基础配置
+      LDAP_ORGANISATION: "Ricewines Organization"
+      LDAP_DOMAIN: "ricewines.github.io"
+      LDAP_BASE_DN: "dc=ricewines,dc=github,dc=io"
+      # 如需自签名证书（LDAPS 用），可保留默认或挂载自定义证书
+      # LDAP_TLS: "true"
+    ports:
+      - "389:389"    # LDAP
+      - "636:636"    # LDAPS
+    volumes:
+      - D:\Users\CXH\data\ldap\data:/var/lib/ldap
+      - D:\Users\CXH\data\ldap\config:/etc/ldap/slapd.d
+    networks:
+      - shared
+    restart: unless-stopped
+
+  phpldapadmin:
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/osixia/phpldapadmin:0.9.0
+    container_name: phpldapadmin
+    environment:
+      PHPLDAPADMIN_HTTPS: "false"
+      # 可选：设置默认登录 DN，方便用户
+      PHPLDAPADMIN_LDAP_HOSTS: "openldap"
+    ports:
+      - "8280:80"
+    depends_on:
+      - openldap
+    networks:
+      - shared
+    restart: unless-stopped
+
+networks:
+  shared:
+    external: true
