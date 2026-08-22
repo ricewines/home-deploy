@@ -15,21 +15,25 @@ services:
       # 宿主机目录:容器内部mysql数据目录
       - D:\Users\CXH\data\mysql:/var/lib/mysql
   chixuehuidocker-minio:
+    command: server /data --console-address ":9001"
     image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/pgsty/minio:RELEASE.2026-06-18T00-00-00Z'
+    networks:
+      - shared
     ports:
       - "19000:9000"
       - "19001:9001"
+    restart: unless-stopped
     volumes:
       - D:\Users\CXH\data\minio\data:/mnt/data
       - D:\Users\CXH\data\minio\minio.license:/minio.license
       - D:\Users\CXH\data\minio\certs:/etc/minio/certs
-    command: server /data --console-address ":9001"
   chixuehuidocker-redis:
     image: 'm.daocloud.io/docker.io/redis:8.10'
     networks:
       - shared
     ports:
       - "16379:6379"
+    restart: unless-stopped
   chixuehuidocker-zookeeper:
     image: 'm.daocloud.io/docker.io/zookeeper:3.9'
     networks:
@@ -37,6 +41,7 @@ services:
     ports:
       - "12181:2181"
       - "18080:8080"
+    restart: unless-stopped
   chixuehuidocker-seen-nginx:
     image: 'm.daocloud.io/docker.io/nginx:1.30'
     volumes:
