@@ -1,0 +1,6 @@
+invest:
+  page-config:
+    domain: http://47.102.222.192:7080/
+spring:
+  datasource:
+    url: jdbc:h2:/database/invest/invest-macro;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
