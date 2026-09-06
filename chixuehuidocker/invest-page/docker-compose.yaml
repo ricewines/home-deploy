@@ -1,7 +1,7 @@
 # docker-compose.yml
 services:
   chixuehuidocker-invest-nginx:
-    image: 'm.daocloud.io/docker.io/nginx:1.30'
+    image: 'm.daocloud.io/docker.io/nginx:1.31'
     volumes:
       - '~/run:/run/html:ro'
       - '~\IdeaProjects\ricewines\home-deploy\chixuehuidocker\invest-page\nginx.conf:/etc/nginx/conf.d/default.conf'

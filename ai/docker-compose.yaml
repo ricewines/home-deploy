@@ -1,0 +1,22 @@
+# docker-compose.yml
+services:
+  ollama:
+    container_name: ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/ollama/ollama:0.24.0'
+    networks:
+      - shared
+    ports:
+      - '11434:11434'
+    restart: unless-stopped
+    volumes:
+      - D:\Users\CXH\data\ai\ollama:/root/.ollama
+networks:
+  shared:
+    external: true
