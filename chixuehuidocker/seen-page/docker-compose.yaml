@@ -24,9 +24,9 @@ services:
       - "19001:9001"
     restart: unless-stopped
     volumes:
-      - D:\Users\CXH\data\minio\data:/mnt/data
-      - D:\Users\CXH\data\minio\minio.license:/minio.license
-      - D:\Users\CXH\data\minio\certs:/etc/minio/certs
+      - D:\Users\CXH\data\minio\data:/data
+      - D:\Users\CXH\data\minio\licenses:/licenses
+      - D:\Users\CXH\data\minio\certs:/root/.minio/certs
   chixuehuidocker-redis:
     image: 'm.daocloud.io/docker.io/redis:8.10'
     networks:

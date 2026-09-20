@@ -5,34 +5,34 @@ Get-Content D:\Users\CXH\data\secret\.env.secret.txt | ForEach-Object {$l=$_.Tri
 echo "QAZCXH_163_COM_MAIL_PASSWORD=$env:QAZCXH_163_COM_MAIL_PASSWORD";
 echo "ZHI_PU_AI_API_KEY=$env:ZHI_PU_AI_API_KEY";
 echo "SPRING_PROFILES_ACTIVE=$env:SPRING_PROFILES_ACTIVE";
-echo "INVEST_VERSION=$env:INVEST_VERSION";
-```
 
-```shell
 ; $env:PATH+=";"+$env:USERPROFILE+"\AppData\Roaming\JetBrains\IntelliJIdea2026.2\node\versions\24.18.1\" ;
 # 校验npm版本
 npm -v;
 ; $env:JAVA_HOME = "C:\Users\chixu\.jdks\openjdk-26.0.2" ; echo "已设置JAVA_HOME：$env:JAVA_HOME" ;
 # 校验Java版本
 & "$env:JAVA_HOME\bin\java.exe" -version ;
+echo "INVEST_VERSION=$env:INVEST_VERSION";
 ```
 
 ```shell
 cd ~\IdeaProjects\ricewines\home-deploy\chixuehuidocker\invest-page
 ```
 
-## 下载和解压工程accounting-page
+## 下载和解压工程accounting-page和invest-admin-page
 
 ```shell
-npm pack accounting-page@$env:INVEST_VERSION ; mkdir $HOME\run\accounting-page\ ; tar -C $HOME\run\accounting-page\ -xzvf ./accounting-page-$env:INVEST_VERSION.tgz ; Remove-Item accounting-page-$env:INVEST_VERSION.tgz -Force;
+npm pack accounting-page@$env:INVEST_VERSION ; 
+New-Item -ItemType Directory -Path "$HOME\run\accounting-page" -Force | Out-Null;
+tar -C $HOME\run\accounting-page\ -xzvf ./accounting-page-$env:INVEST_VERSION.tgz ; 
+Remove-Item accounting-page-$env:INVEST_VERSION.tgz -Force;
 # 部署工程accounting-page
 cd $HOME\run\accounting-page\package ; npm install ; npm run build ;
-```
 
-## 下载和解压工程invest-admin-page
-
-```shell
-npm pack invest-admin-page@$env:INVEST_VERSION ; mkdir $HOME\run\invest-admin-page\ ; tar -C $HOME\run\invest-admin-page\ -xzvf ./invest-admin-page-$env:INVEST_VERSION.tgz ; Remove-Item invest-admin-page-$env:INVEST_VERSION.tgz -Force;
+npm pack invest-admin-page@$env:INVEST_VERSION ; 
+New-Item -ItemType Directory -Path "$HOME\run\invest-admin-page" -Force | Out-Null;
+tar -C $HOME\run\invest-admin-page\ -xzvf ./invest-admin-page-$env:INVEST_VERSION.tgz ; 
+Remove-Item invest-admin-page-$env:INVEST_VERSION.tgz -Force;
 # 部署工程invest-admin-page
 cd $HOME\run\invest-admin-page\package ; npm install ; npm run build;
 ```
