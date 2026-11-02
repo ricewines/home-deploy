@@ -42,7 +42,7 @@ cd ~/run ; Remove-Item -Recurse -Force invest ; git clone https://github.com/ric
 ```
 
 ```shell
-./mvnw clean install
+./mvnw clean install "-Dmaven.javadoc.skip=true" "-Dmaven.source.skip=true";
 ```
 
 ## 拉取镜像
