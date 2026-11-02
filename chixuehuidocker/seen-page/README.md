@@ -34,7 +34,7 @@ cd ~/run/seen-backend
 ```
 
 ```shell
-./mvnw.cmd clean install
+./mvnw.cmd clean install "-Dmaven.javadoc.skip=true" "-Dmaven.source.skip=true"
 ```
 
 ## 拉取镜像
