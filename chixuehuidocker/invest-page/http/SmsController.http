@@ -8,6 +8,16 @@ Host: 47.102.222.192:7080
   "receiver": "13800138000",
   "content": "test您的验证码：666666"
 }
+### handlePush
+POST /invest/macro/api/sys/sms/handle-push
+Content-Type: application/json
+Host: 47.102.222.192:7080
+
+{
+  "sender": "SIM-+8613800138000",
+  "message": "【XX】您的验证码为123456",
+  "timestamp": "2026-11-05 23:30:55"
+}
 
 ### subscribe
 GET /invest/macro/api/sys/sms/subscribe?clientId=1

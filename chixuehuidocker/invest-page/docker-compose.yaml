@@ -38,6 +38,7 @@ services:
     volumes:
       - '~/run/invest/invest-macro/target/invest-macro-${INVEST_VERSION}.jar:/app.jar'
       - '~/IdeaProjects/ricewines/home-deploy/chixuehuidocker/invest-page:/config'
+      - 'D:\Users\CXH\data\database:/database'
     working_dir: /
 networks:
   shared:
