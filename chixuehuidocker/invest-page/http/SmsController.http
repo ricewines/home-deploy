@@ -1,0 +1,15 @@
+### forward
+POST /invest/macro/api/sys/sms/forward
+Content-Type: application/json
+Host: 47.102.222.192:7080
+
+{
+  "sender": "106900001111",
+  "receiver": "13800138000",
+  "content": "test您的验证码：666666"
+}
+
+### subscribe
+GET /invest/macro/api/sys/sms/subscribe?clientId=1
+Content-Type: application/json
+Host: 47.102.222.192:7080
