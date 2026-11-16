@@ -16,7 +16,7 @@ services:
       - D:\Users\CXH\data\mysql:/var/lib/mysql
   chixuehuidocker-minio:
     command: server /data --console-address ":9001"
-    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/pgsty/minio:RELEASE.2026-06-18T00-00-00Z'
+    image: 'm.daocloud.io/docker.io/pgsty/minio:RELEASE.2026-08-04T00-00-00Z'
     networks:
       - shared
     ports:
