@@ -5,17 +5,26 @@ Get-Content D:\Users\CXH\data\secret\.env.secret.txt | ForEach-Object {$l=$_.Tri
 echo "QAZCXH_163_COM_MAIL_PASSWORD=$env:QAZCXH_163_COM_MAIL_PASSWORD";
 echo "ZHI_PU_AI_API_KEY=$env:ZHI_PU_AI_API_KEY";
 echo "SPRING_PROFILES_ACTIVE=$env:SPRING_PROFILES_ACTIVE";
-; $env:PATH+=";"+$env:USERPROFILE+"\AppData\Roaming\JetBrains\IntelliJIdea2026.2\node\versions\24.18.1\" ;
+; $env:PATH+=";"+$env:USERPROFILE+"\AppData\Roaming\JetBrains\IntelliJIdea2026.3\node\versions\26.13.1\" ;
 # 校验npm版本
 npm -v;
-; $env:JAVA_HOME = "C:\Users\chixu\.jdks\openjdk-26.0.2" ; echo "已设置JAVA_HOME：$env:JAVA_HOME" ;
+; $env:JAVA_HOME = "C:\Users\chixu\.jdks\openjdk-27.0.1.0.3" ; echo "已设置JAVA_HOME：$env:JAVA_HOME" ;
 # 校验Java版本
 & "$env:JAVA_HOME\bin\java.exe" -version ;
 echo "SEEN_VERSION=$env:SEEN_VERSION";
-cd ~\IdeaProjects\ricewines\home-deploy\chixuehuidocker\seen-page
+cd ~\IdeaProjects\ricewines\home-deploy\chixuehuidocker\seen-page;
 ```
 
-## 下载和解压工程seen-font-end
+## 下载和构建后端
+
+```shell
+cd ~/run ; Remove-Item -Recurse -Force seen-backend ; 
+git clone https://github.com/seenings/seen-backend.git ;
+cd ~/run/seen-backend;
+./mvnw.cmd clean install "-Dmaven.javadoc.skip=true" "-Dmaven.source.skip=true" ;
+```
+
+## 下载和构建前端
 
 ```shell
 npm pack seen-font-end@$env:SEEN_VERSION ; 
@@ -23,18 +32,6 @@ New-Item -ItemType Directory -Path "$HOME\run\seen-font-end" -Force | Out-Null;
 tar -C $HOME\run\seen-font-end\ -xzvf ./seen-font-end-$env:SEEN_VERSION.tgz ; Remove-Item seen-font-end-$env:SEEN_VERSION.tgz -Force;
 # 部署工程seen-font-end
 cd $HOME\run\seen-font-end\package ; npm install ; npm run build;
-```
-
-```shell
-cd ~/run ; Remove-Item -Recurse -Force seen-backend ; git clone https://github.com/seenings/seen-backend.git 
-```
-
-```shell
-cd ~/run/seen-backend
-```
-
-```shell
-./mvnw.cmd clean install "-Dmaven.javadoc.skip=true" "-Dmaven.source.skip=true"
 ```
 
 ## 拉取镜像
