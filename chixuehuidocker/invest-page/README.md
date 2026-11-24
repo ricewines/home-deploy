@@ -9,7 +9,7 @@ echo "SPRING_PROFILES_ACTIVE=$env:SPRING_PROFILES_ACTIVE";
 ; $env:PATH+=";"+$env:USERPROFILE+"\AppData\Roaming\JetBrains\IntelliJIdea2026.3\node\versions\26.13.1\" ;
 # 校验npm版本
 npm -v;
-; $env:JAVA_HOME = "C:\Users\chixu\.jdks\openjdk-27.0.1.0.3" ; echo "已设置JAVA_HOME：$env:JAVA_HOME" ;
+; $env:JAVA_HOME = "C:\Users\chixu\.jdks\openjdk-27.0.1.1" ; echo "已设置JAVA_HOME：$env:JAVA_HOME" ;
 # 校验Java版本
 & "$env:JAVA_HOME\bin\java.exe" -version ;
 echo "INVEST_VERSION=$env:INVEST_VERSION";
