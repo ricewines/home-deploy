@@ -9,7 +9,7 @@ services:
             - driver: nvidia
               count: all
               capabilities: [ gpu ]
-    image: 'swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/ollama/ollama:0.24.0'
+    image: 'm.daocloud.io/docker.io/ollama/ollama:0.40.18'
     networks:
       - shared
     ports:
